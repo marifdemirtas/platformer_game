@@ -182,10 +182,62 @@ class Player(pg.sprite.Sprite):
         self.rect.midbottom = self.pos
 
 
+class GreenMob(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        super(GreenMob, self).__init__()
+        self.game = game
+
+        self.idle = [self.game.ss2.get_image(0, 0, 9, 9),
+                     self.game.ss2.get_image(9, 0, 9, 9),
+                     self.game.ss2.get_image(0, 0, 9, 9),
+                     self.game.ss2.get_image(18, 0, 9, 9)]
+
+        self.image = pg.Surface(self.idle[0].get_rect().size)
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = x, y
+
+        self.curr_frame = 0
+        self.last_update = 0
+
+    def animate(self):
+        now = pg.time.get_ticks()
+
+        if now - self.last_update > 350:
+            self.last_update = now
+            self.curr_frame = (self.curr_frame + 1) % 4
+            self.image = self.idle[self.curr_frame]
+
+
+class BlueMob(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        super(BlueMob, self).__init__()
+        self.game = game
+
+        self.idle = [self.game.ss2.get_image(9, 9, 9, 9),
+                     self.game.ss2.get_image(0, 9, 9, 9),
+                     self.game.ss2.get_image(9, 9, 9, 9),
+                     self.game.ss2.get_image(18, 9, 9, 9)]
+
+        self.image = pg.Surface(self.idle[0].get_rect().size)
+        self.rect = self.image.get_rect()
+        self.rect.midtop = x, y
+
+        self.curr_frame = 0
+        self.last_update = 0
+
+    def animate(self):
+        now = pg.time.get_ticks()
+
+        if now - self.last_update > 100:
+            self.last_update = now
+            self.curr_frame = (self.curr_frame + 1) % 4
+            self.image = self.idle[self.curr_frame]
+
+
 class Platform(pg.sprite.Sprite):
     def __init__(self, x, y, w, h):
         super(Platform, self).__init__()
         self.image = pg.Surface((w, h))
         self.image.fill(Colors.GREEN)
         self.rect = self.image.get_rect()
-        self.rect.center = x, y
+        self.rect.midbottom = x, y
